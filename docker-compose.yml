@@ -8,6 +8,13 @@ services:
     volumes:
       - moodledata:/var/moodledata
       - ./moodle:/var/www/html
+    environment:
+      - MOODLE_DB_TYPE=mysqli
+      - MOODLE_DB_HOST=database
+      - MOODLE_DB_NAME=moodle
+      - MOODLE_DB_USER=moodle
+      - MOODLE_DB_PASSWORD=your_password
+      - MOODLE_DB_PREFIX=mdl_
     depends_on:
       - database
     networks:
@@ -18,8 +25,8 @@ services:
     environment:
       - MYSQL_DATABASE=moodle
       - MYSQL_USER=moodle
-      - MYSQL_PASSWORD=User4moodle
-      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_PASSWORD=your_password
+      - MYSQL_ROOT_PASSWORD=your_root_password
     volumes:
       - dbdata:/var/lib/mysql
     networks:
