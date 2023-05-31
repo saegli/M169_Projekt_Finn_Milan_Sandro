@@ -1,1 +1,14 @@
+version: '3'
 
+services:
+  moodle:
+    image: moodlehq/moodle-php-apache:4.0
+    ports:
+      - 80:80
+    volumes:
+      - moodledata:/var/moodledata
+      - ./moodle:/var/www/html
+    depends_on:
+      - database
+    networks:
+      - moodle_net
