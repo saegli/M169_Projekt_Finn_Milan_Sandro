@@ -1,5 +1,5 @@
 # Basisimage
-FROM php:8.0-apache
+FROM php:7.4-apache
 
 # Arbeitsverzeichnis im Container
 WORKDIR /var/www/html
