@@ -1,40 +1,49 @@
-version: '3'
+version: '3.9'
 
 services:
-  moodle:
-    image: moodlehq/moodle-php-apache:4.0
-    ports:
-      - 80:80
-    volumes:
-      - moodledata:/var/moodledata
-      - ./moodle:/var/www/html
-    environment:
-      - MOODLE_DB_TYPE=mysqli
-      - MOODLE_DB_HOST=database
-      - MOODLE_DB_NAME=moodle
-      - MOODLE_DB_USER=moodle
-      - MOODLE_DB_PASSWORD=your_password
-      - MOODLE_DB_PREFIX=mdl_
-    depends_on:
-      - database
+  mariadb:
+    image: "mariadb"
     networks:
-      - moodle_net
+      - moodle
+    environment:
+      - MARIADB_DATABASE=moodle
+      - MARIADB_USER=moodleadmin
+      - MARIADB_PASSWORD=Riethuesli>12345
+      - MARIADB_RANDOM_ROOT_PASSWORD=true
+    volumes:
+      - mariadb_data:/var/lib/mysql
+  
 
-  database:
-    image: mysql:5.7
+  moodle:
+    image: bitnami/moodle:4.1
+    ports:
+      - '80:8080'
+      - '8443:8443'
     environment:
-      - MYSQL_DATABASE=moodle
-      - MYSQL_USER=moodle
-      - MYSQL_PASSWORD=your_password
-      - MYSQL_ROOT_PASSWORD=your_root_password
+      - MOODLE_DATABASE_HOST=mariadb
+      - MOODLE_DATABASE_NAME=moodle
+      - MOODLE_DATABASE_USER=moodleadmin
+      - MOODLE_DATABASE_PASSWORD=Riethuesli>12345
     volumes:
-      - dbdata:/var/lib/mysql
+      - moodle_data:/bitnami/moodle
+      - moodledata_data:/bitnami/moodledata
     networks:
-      - moodle_net
+      - moodle
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    ports:
+      - 8888:80
+    environment:
+      - PMA_HOST=mariadb
+    networks:
+      - moodle
 
 networks:
-  moodle_net:
+  moodle-net:
+    driver: bridge
 
 volumes:
-  moodledata:
-  dbdata:
+  mariadb_data:
+  moodle_data:
+  moodledata_data:
